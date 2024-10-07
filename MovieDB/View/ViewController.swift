@@ -25,6 +25,7 @@ class ViewController: UIViewController {
         tableView.delegate = self
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(TableViewCell.self, forCellReuseIdentifier: "cell")
+        tableView.separatorColor = .none
         return tableView
     }()
     
