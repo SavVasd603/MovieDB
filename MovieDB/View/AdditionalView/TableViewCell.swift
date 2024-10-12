@@ -13,6 +13,9 @@ class TableViewCell: UITableViewCell {
         let image = UIImageView()
         image.translatesAutoresizingMaskIntoConstraints = false
         image.contentMode = .scaleAspectFit
+        image.clipsToBounds = true
+        image.layer.cornerRadius = 12
+        
         return image
     }()
     lazy var title: UILabel = {
@@ -27,6 +30,7 @@ class TableViewCell: UITableViewCell {
         let stackView = UIStackView(arrangedSubviews: [imagePoster, title])
         stackView.spacing = 10
         stackView.axis = .vertical
+        stackView.alignment = .fill
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
@@ -51,7 +55,7 @@ class TableViewCell: UITableViewCell {
             stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             
-//            title.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -15),
+            title.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -15),
 //            imagePoster.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 5)
         ])
         
