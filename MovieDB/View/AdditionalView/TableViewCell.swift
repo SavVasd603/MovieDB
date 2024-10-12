@@ -51,8 +51,8 @@ class TableViewCell: UITableViewCell {
             stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             
-            title.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -15),
-            imagePoster.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 5)
+//            title.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -15),
+//            imagePoster.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 5)
         ])
         
     }

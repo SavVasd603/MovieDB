@@ -34,9 +34,17 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view.
         view.backgroundColor = .white
         setupUI()
+        apiRequest()
     }
     
-    var movies: [Movie] = Array(repeating: Movie(), count: 9)
+    func apiRequest() {
+        NetworkManager.shared.loadMovie { result in
+            self.movies = result.results
+            self.movieTableView.reloadData()
+        }
+    }
+    
+    var movies: [Result] = []
     
     func setupUI() {
         view.addSubview(movieTableView)
@@ -64,7 +72,9 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = movieTableView.dequeueReusableCell(withIdentifier: "cell") as! TableViewCell
         let movie = movies[indexPath.row]
-        cell.imagePoster.image = movie.poster
+        NetworkManager.shared.loadImage(posterPath: movie.posterPath) {image in
+            cell.imagePoster.image = image
+        }
         cell.title.text = movie.title
         return cell
     }
