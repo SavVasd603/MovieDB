@@ -12,7 +12,7 @@ class TableViewCell: UITableViewCell {
     lazy var imagePoster: UIImageView = {
         let image = UIImageView()
         image.translatesAutoresizingMaskIntoConstraints = false
-        image.contentMode = .scaleAspectFit
+        image.contentMode = .scaleAspectFill
         image.clipsToBounds = true
         image.layer.cornerRadius = 12
         
@@ -55,8 +55,11 @@ class TableViewCell: UITableViewCell {
             stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             
-            title.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -15),
-//            imagePoster.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 5)
+            title.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20),
+            imagePoster.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 5),
+            
+            imagePoster.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 60),
+            imagePoster.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -60)
         ])
         
     }
