@@ -64,4 +64,25 @@ class NetworkManager {
             task.resume()
         }
     }
+    
+    func loadDetail(movieId: Int, complition: @escaping (MovieDetail)->()) {
+        urlComponents.path = "/3/movie/\(movieId)"
+        guard let url = urlComponents.url else {return}
+        DispatchQueue.global().async {
+            let task = self.session.dataTask(with: url) { data, response, error in
+                if let error = error {
+                    return print(error)
+                }
+                
+                guard let data else {return}
+                if let movieDetail = try? JSONDecoder().decode(MovieDetail.self, from: data) {
+                    DispatchQueue.main.async {
+                        complition(movieDetail)
+                    }
+                }
+            }
+            task.resume()
+        }
+    }
+    
 }

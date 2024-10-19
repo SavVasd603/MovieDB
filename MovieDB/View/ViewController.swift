@@ -44,6 +44,7 @@ class ViewController: UIViewController {
         }
     }
     
+    var movieID: Int?
     var movies: [Result] = []
     
     func setupUI() {
@@ -81,6 +82,13 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 460 // Задаем высоту каждой ячейки
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let movie = movies[indexPath.row]
+        let vc = MovieDetailViewController()
+        vc.movieID = movie.id
+        navigationController?.pushViewController(vc, animated: true)
     }
     
 }
