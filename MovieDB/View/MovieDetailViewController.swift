@@ -39,11 +39,25 @@ class MovieDetailViewController: UIViewController {
         return label
     }()
     
-//    lazy var collectionView: UICollectionView = {
-//
-//    }()
+    private lazy var collectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        layout.minimumLineSpacing = 10
+        layout.minimumInteritemSpacing = 10
+        
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.register(GenreCell.self, forCellWithReuseIdentifier: GenreCell.identifier)
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        collectionView.backgroundColor = .clear
+        collectionView.showsHorizontalScrollIndicator = false // Отключаем горизонтальный индикатор
+        collectionView.showsVerticalScrollIndicator = false // Отключаем вертикальный индикатор
+        return collectionView
+    }()
+
     
     var movieID: Int?
+    var genres: [Genre] = []
     private var movieDetail: MovieDetail?
     
     override func viewDidLoad() {
@@ -68,6 +82,11 @@ class MovieDetailViewController: UIViewController {
                 let year = releaseDate.prefix(4)
                 self.releaseDate.text = "Release date: \(year) "
             }
+            
+            if let genres = movieDetail.genres {
+                self.genres = genres
+                self.collectionView.reloadData()
+            }
         }
     }
     
@@ -77,7 +96,7 @@ class MovieDetailViewController: UIViewController {
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
 
-        [poster, movieTitle, releaseDate].forEach {
+        [poster, movieTitle, releaseDate, collectionView].forEach {
             scrollView.addSubview($0)
         }
         
@@ -107,6 +126,43 @@ class MovieDetailViewController: UIViewController {
             make.leading.equalToSuperview().inset(15)
         }
         
+        collectionView.snp.makeConstraints { make in
+                make.top.equalTo(releaseDate.snp.bottom).offset(10)
+                make.leading.trailing.equalToSuperview().inset(10)
+                make.height.equalTo(40) // Привязываем фиксированную высоту
+                make.bottom.equalToSuperview() // Завершаем contentView этим элементом
+            }
+    }
+}
+
+extension MovieDetailViewController:UICollectionViewDelegate, UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        genres.count
     }
     
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: GenreCell.identifier, for: indexPath) as? GenreCell else {
+            fatalError("Unable to dequeue GenreCell")
+        }
+        let genre = genres[indexPath.item]
+        cell.configure(with: genre) // Настраиваем ячейку с жанром
+        return cell
+    }
 }
+
+extension MovieDetailViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let genre = genres[indexPath.item]
+        let padding: CGFloat = 16 // Отступы по бокам
+
+        // Вычисляем ширину текста с учётом шрифта
+        let font = UIFont.systemFont(ofSize: 14, weight: .medium)
+        let textWidth = genre.name!.size(withAttributes: [.font: font]).width
+
+        // Ограничиваем минимальную и максимальную ширину ячейки
+        let width = min(max(textWidth + padding, 60), collectionView.frame.width - 32)
+
+        return CGSize(width: width, height: 40)
+    }
+}
+
